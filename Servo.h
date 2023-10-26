@@ -6,18 +6,21 @@
 #define STM32_SERVO_SERVO_H
 
 #include "stm32f4xx_hal.h"
+#include "types/parameter.h"
+
+template <typename T> int sgn(T val) {
+  return (T(0) < val) - (val < T(0));
+}
 
 class Servo {
 public:
-  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, uint8_t min_angle, uint8_t max_angle);
-  void angle(float steering_angle);
+  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, parameter_servo_t &parameter_);
+
+  void move(float angle);
 private:
   TIM_HandleTypeDef *htim;
   uint8_t channel;
-  struct {
-    uint8_t min_angle;
-    uint8_t max_angle;
-  } steering_limits;
+  parameter_servo_t &parameter;
 };
 
 #endif //STM32_SERVO_SERVO_H
