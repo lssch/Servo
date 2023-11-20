@@ -5,14 +5,6 @@
 #include "Servo.h"
 #include <iostream>
 
-
-Servo::Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, parameter_servo_t &parameter_):
-  htim(htim_),
-  channel(channel_),
-  parameter(parameter_) {
-}
-
-
 void Servo::move(float angle) {
   float scale;
 
@@ -27,6 +19,10 @@ void Servo::move(float angle) {
     // Full positive/negative steering angle based on the provided parameters
     scale = (sgn(angle)*parameter.steering_limits)/(parameter.max_steering_angle) + 1.5;
 
-  htim->Instance->CCR1 = scale * htim->Instance->ARR/20;
+  // TODO: Needs to be tested
+  // Linear mapping between [0.5, 2.5] based on the provided parameters and steering angle
+  scale = static_cast<float>((angle+static_cast<float>(parameter.zero_position))/static_cast<float>(parameter.max_steering_angle) + 1.5f);
+
+  htim->Instance->CCR1 = static_cast<uint32_t>(static_cast<float>(htim->Instance->ARR) * scale/20);
   HAL_TIM_PWM_Start(htim, channel);
 }

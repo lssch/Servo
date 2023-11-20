@@ -14,7 +14,8 @@ template <typename T> int sgn(T val) {
 
 class Servo {
 public:
-  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, parameter_servo_t &parameter_);
+  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, parameter_servo_t &parameter_)
+  : htim(htim_), channel(channel_), parameter(parameter_) {};
 
   void move(float angle);
 private:
