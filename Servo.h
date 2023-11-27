@@ -5,23 +5,18 @@
 #ifndef STM32_SERVO_SERVO_H
 #define STM32_SERVO_SERVO_H
 
-#include "stm32f4xx_hal.h"
 #include "types/parameter.h"
-
-template <typename T> int sgn(T val) {
-  return (T(0) < val) - (val < T(0));
-}
+#include "stm32f4xx_hal.h"
 
 class Servo {
 public:
-  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, parameter_servo_t &parameter_)
-  : htim(htim_), channel(channel_), parameter(parameter_) {};
+  Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, Parameter::Servo *parameter_);
 
   void move(float angle);
 private:
   TIM_HandleTypeDef *htim;
   uint8_t channel;
-  parameter_servo_t &parameter;
+  Parameter::Servo *parameter;
 };
 
 #endif //STM32_SERVO_SERVO_H
