@@ -4,23 +4,19 @@
 
 #include "Servo.h"
 
-Servo::Servo(TIM_HandleTypeDef *htim_, uint8_t channel_, Parameter::Servo *parameter_):
-  htim(htim_),
-  channel(channel_),
-  parameter(parameter_) {
+Servo::Servo(TIM_HandleTypeDef &htim, const uint8_t channel, const Parameter::Servo &parameter)
+  : _htim(htim),
+    _channel(channel),
+    _parameter(parameter) {
 }
 
-void Servo::move(int16_t angle) {
-  float scale;
+void Servo::move(const int16_t angle) {
+  // servo limits _parameter.max_steering_angle
+  // offset _parameter.zero_position
+  // mechanical limits _parameter.steering_limits
 
-  // servo limits parameter.max_steering_angle
-  // offset parameter.zero_position
-  // mechanical limits parameter.steering_limits
+  float scale = (static_cast<float>(angle)+static_cast<float>(_parameter.zero_position))/static_cast<float>(_parameter.max_steering_angle) + 1.5f;
 
-  // TODO: Needs to be tested
-  // Linear mapping between [0.5, 2.5] based on the provided parameters and steering angle
-  scale = static_cast<float>((static_cast<float>(angle)+static_cast<float>(parameter->zero_position))/static_cast<float>(parameter->max_steering_angle) + 1.5f);
-
-  htim->Instance->CCR1 = static_cast<uint32_t>(static_cast<float>(htim->Instance->ARR) * scale/20);
-  HAL_TIM_PWM_Start(htim, channel);
+  _htim.Instance->CCR1 = static_cast<uint32_t>(static_cast<float>(_htim.Instance->ARR) * scale/20);
+  HAL_TIM_PWM_Start(&_htim, _channel);
 }
