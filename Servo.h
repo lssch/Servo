@@ -11,9 +11,9 @@
 class Servo {
 public:
   /// @brief Servo object
-  /// @param htim Timer witch is connected to the output.
-  /// @param channel Channel witch is connected to to the output.
-  /// @param parameter Parameters witch contains the information about the hardware implementation of the Servo
+  /// @param[in,out] htim Timer which is connected to the output.
+  /// @param[in] channel Channel which is connected to to the output.
+  /// @param[in] parameter Parameters which contains the information about the hardware implementation of the Servo
   Servo(TIM_HandleTypeDef &htim, const uint8_t channel, const Parameter::Servo &parameter);
 
   /// @brief Move the servo based on an angle in centi degrees for better resolution.
